@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Models/Overlay/ShipOverlay/ShipHealthBar.gd" type="Script" id=1]
+
+[node name="ShipHealthBar" type="Node2D"]
+scale = Vector2( 5, 1.5 )
+script = ExtResource( 1 )
+
+[node name="GreenBack" type="Polygon2D" parent="."]
+scale = Vector2( 2, 1 )
+color = Color( 0.556863, 0.988235, 0.560784, 1 )
+polygon = PoolVector2Array( -17.4, 4.66667, 17.3, 4.66667, 15.1, -4.66667, -15.1, -4.66667 )
+
+[node name="BlackBack" type="Polygon2D" parent="."]
+scale = Vector2( 2, 1 )
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -17, 4, 16.9, 4, 15, -4, -15, -4 )
+
+[node name="Health" type="Polygon2D" parent="."]
+scale = Vector2( 2, 1 )
+color = Color( 0.556863, 0.988235, 0.560784, 1 )
+polygon = PoolVector2Array( -16.3, 2.66667, 16.2, 2.66667, 15, -2.66667, -15, -2.66667 )
+

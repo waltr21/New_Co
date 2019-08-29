@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Models/Asteroid/AsteroidBasic/AsteroidShard.gd" type="Script" id=1]
+
+[node name="Shard" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 1 )
+
