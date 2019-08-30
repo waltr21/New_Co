@@ -113,14 +113,16 @@ func addShards():
 	randomize()
 	var numShards = int(rand_range(4,10))
 	for i in range(numShards):
-		var tempShard = load("res://Models/Asteroid/AsteroidBasic/AsteroidShard.tscn").instance()
-		tempShard.position = self.position
-		tempShard.radius = self.baseSize * level
-		tempShard.angleFrom = angle
-		angle += 2*PI / (numShards*1.0)
-		tempShard.angleTo = angle
-		tempShard.setColor(astColor)
-		Globals.Main_Scene.add_child(tempShard)
+		if(Globals.Main_Scene.allShards.size() > 0):
+			var tempShard = Globals.Main_Scene.allShards.pop_front()
+			tempShard.position = self.position
+			tempShard.radius = self.baseSize * level
+			tempShard.angleFrom = angle
+			angle += 2*PI / (numShards*1.0)
+			tempShard.angleTo = angle
+			tempShard.setColor(astColor)
+			tempShard.visible = true
+			tempShard.stamp = OS.get_ticks_msec()
 
 func processEnter(obj):
 	if(!dead):
