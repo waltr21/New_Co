@@ -17,6 +17,7 @@ var fuelRate = 10
 var MAX_HEALTH = 100.0
 var health = 100
 var lerpPos = Vector2(0,0)
+var allFuel = []
 
 onready var Main_Scene = get_parent()
 onready var heatBar = get_node("ShipOverlay/ShipHeatBar")
@@ -26,7 +27,15 @@ onready var camera = get_node("ShipCamera")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	heatBar.setGrowCool(1,1)
-	pass # Replace with function body.
+	initFuelPool()
+
+func initFuelPool():
+	for i in range(100):
+		var particle = load("res://Models/Ship/FuelParticle.tscn").instance()
+		particle.visible = false
+		particle.parentShip = self
+		allFuel.push_front(particle)
+		Globals.Main_Scene.add_child(particle)
 
 func lerpToPos(d):
 	if(lerpPos.x + lerpPos.y != 0):
@@ -82,12 +91,13 @@ func get_input(d):
 func addFuelParticle():
 	if(OS.get_ticks_msec() - fuelStamp > fuelRate):
 		fuelStamp = OS.get_ticks_msec()
-		var particle = load("res://Models/Ship/FuelParticle.tscn").instance()
-		particle.position = self.position
-		particle.origin = self.position
-		particle.setVelocity(self.rotation, acc)
-		Globals.Main_Scene.add_child(particle)
-		
+		if(allFuel.size() > 0):
+			var particle = allFuel.pop_front()
+			particle.position = self.position
+			particle.origin = self.position
+			particle.setVelocity(self.rotation, acc)
+			particle.visible = true
+			particle.stamp = OS.get_ticks_msec()
 
 func shoot():
 	if(OS.get_ticks_msec() - shotStamp > fireRate and !heatBar.overHeat):

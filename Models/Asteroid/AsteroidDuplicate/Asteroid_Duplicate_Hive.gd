@@ -16,6 +16,7 @@ func _ready():
 	randomize()
 	self.dead = false
 	self.rotation = rand_range(0, 2*PI)
+	self.damage = 20
 	velocity = Vector2(0,0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

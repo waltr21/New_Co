@@ -5,20 +5,23 @@ var stars = []
 var globalDelta = 0
 var numStars = 0
 var starColor = Color("#b3fff1")
-onready var ship = get_node("Player_1")
+onready var ship = load("res://Models/Ship/Ship.tscn").instance()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	VisualServer.set_default_clear_color(Color(0,0,0))
+	#VisualServer.set_default_clear_color(Color(0,0,0))
 	#populateBackground()
 	Globals.Main_Scene = self
 	Globals.players.push_front(ship)
+	Globals.Main_Scene.add_child(ship)
+	initShards()
 
 func initShards():
 	for i in range(100):
 		var tempShard = load("res://Models/Asteroid/AsteroidBasic/AsteroidShard.tscn").instance()
 		allShards.push_front(tempShard)
-		tempShard.setVisible(false)
+		tempShard.visible = false
+		Globals.Main_Scene.add_child(tempShard)
 
 func populateBackground():
 	for i in range(3000):

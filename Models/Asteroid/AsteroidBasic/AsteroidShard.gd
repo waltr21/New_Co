@@ -2,7 +2,7 @@ extends Node2D
 
 var color = Color("#FFF")
 var center = Vector2(0,0)
-var radius = 20
+var radius = 200
 var angleFrom = 0
 var angleTo = PI
 var velocity = Vector2(0,0)
@@ -22,10 +22,11 @@ func _ready():
 		rotateSpeed = rand_range(3,3)
 
 func _process(delta):
-	self.position += velocity * delta * acc
-	self.rotation += rotateSpeed * delta
-	die()
-	update()
+	if(visible):
+		self.position += velocity * delta * acc
+		self.rotation += rotateSpeed * delta
+		die()
+		update()
 
 func setColor(c):
 	color = Color(c)
@@ -34,10 +35,12 @@ func die():
 	var tempTime = OS.get_ticks_msec() - stamp
 	visibility = 1 - (tempTime / ttl)
 	if(tempTime > ttl):
-		self.queue_free()
+		self.visible = false
+		Globals.Main_Scene.allShards.push_back(self)
 
 func _draw():
-	draw_circle_arc(center, radius, angleFrom, angleTo, Color(color.r, color.g, color.b, visibility))
+	if(visible):
+		draw_circle_arc(center, radius, angleFrom, angleTo, Color(color.r, color.g, color.b, visibility))
 
 func draw_circle_arc(center, radius, angle_from, angle_to, color):
 	angle_from = (angle_from / (2*PI)) * 360.0

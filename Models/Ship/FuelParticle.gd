@@ -13,20 +13,23 @@ var stamp = 0
 var randG = rand_range(0, 225)
 var randR = rand_range(0, 225)
 var randB = rand_range(0, 225)
+var parentShip = null
 
 func _ready():
 	stamp = OS.get_ticks_msec()
 	color = Color(1, randG/255.0, 0, 1)
 
 func _process(delta):
-	color = Color(1, randG/255.0, 0, 1 - (OS.get_ticks_msec() - stamp)/(maxTime*1.6))
-	position += velocity * acc * delta
-	bound()
-	update()
+	if(visible):
+		color = Color(1, randG/255.0, 0, 1 - (OS.get_ticks_msec() - stamp)/(maxTime*1.6))
+		position += velocity * acc * delta
+		bound()
+		update()
 	
 func bound():
 	if(OS.get_ticks_msec() - stamp > maxTime):
-		self.queue_free()
+		self.visible = false
+		parentShip.allFuel.push_back(self)
 
 func setVelocity(rot, acc):
 	rot += rand_range(-2.0, 2.0)
