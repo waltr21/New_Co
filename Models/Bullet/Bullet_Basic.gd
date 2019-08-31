@@ -1,8 +1,9 @@
 extends Area2D
 
-var velocity = Vector2(1,0)
+var velocity = Vector2(0,0)
 var acc = 800
 var size = 2
+var startingVelocity = Vector2(0,0)
 onready var collisionShape = get_node("BulletCollision")
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -11,7 +12,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	self.position += velocity * delta * acc
+	self.position += ((velocity + startingVelocity) * delta * acc)
 	bound()
 
 func bound():

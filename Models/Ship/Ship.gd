@@ -75,7 +75,7 @@ func get_input(d):
 	if Input.is_action_pressed("temp_ast"):
 		if(OS.get_ticks_msec() - shotStamp > fireRate):
 			shotStamp = OS.get_ticks_msec()
-			var ast = load("res://Models/Asteroid/AsteroidDuplicate/Asteroid_Duplicate_Hive.tscn").instance()
+			var ast = load("res://Models/Asteroid/Roper/Roper.tscn").instance()
 			ast.velocity = (Vector2(cos(rotation), sin(rotation)))
 			ast.position = Vector2(self.position.x + 240, self.position.y + 240) 
 			
@@ -95,7 +95,7 @@ func addFuelParticle():
 			var particle = allFuel.pop_front()
 			particle.position = self.position
 			particle.origin = self.position
-			particle.setVelocity(self.rotation, acc)
+			particle.setVelocity(self.rotation)
 			particle.visible = true
 			particle.stamp = OS.get_ticks_msec()
 
@@ -105,6 +105,8 @@ func shoot():
 		var bullet = load("res://Models/Bullet/Bullet_Basic.tscn").instance()
 		bullet.velocity = (Vector2(cos(rotation), sin(rotation)))
 		bullet.position = self.position
+		bullet.startingVelocity = self.velocity / acc
+		print(bullet.startingVelocity)
 		Main_Scene.add_child(bullet)
 		heatBar.grow()
 

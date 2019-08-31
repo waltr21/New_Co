@@ -31,7 +31,7 @@ func bound():
 		self.visible = false
 		parentShip.allFuel.push_back(self)
 
-func setVelocity(rot, acc):
+func setVelocity(rot):
 	rot += rand_range(-2.0, 2.0)
 	velocity = Vector2(cos(rot + PI), sin(rot + PI))
 
