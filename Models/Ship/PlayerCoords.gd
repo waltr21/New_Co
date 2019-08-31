@@ -6,15 +6,18 @@ var scale1 = 0
 var scale2 = 0
 var scaleRate = 1
 var show = true
+onready var label = get_node("Label")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	label.rect_position = Vector2(line1End.x, line1End.y - 40)
+	label.rect_scale = Vector2(0,0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	#Stabilize the rotation
 	if(show):
+		label.text = str(int(get_parent().position.x) / 100) + " - " + str(int(get_parent().position.y) / 100)
 		self.rotation = get_parent().rotation * -1
 		scaleUp(delta)
 		boundScale()
@@ -25,14 +28,13 @@ func scaleUp(d):
 	scale1 += scaleRate * d
 	if(scale1 >= 1.0):
 		scale2 += scaleRate * d
+		label.rect_scale = Vector2(scale2,1)
 
 func boundScale():
 	if(scale1 > 1):
 		scale1 = 1.0
 	if(scale2 > 1):
 		scale2 = 1.0
-	
-
 
 func _draw():
 	var temp = Vector2(line1End.x + line2End.x * scale2, line2End.y)
