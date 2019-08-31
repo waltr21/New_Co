@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Models/Ship/PlayerCoords.gd" type="Script" id=1]
+
+[node name="Node2D" type="Node2D"]
+position = Vector2( 0, -0.227043 )
+z_index = 2
+script = ExtResource( 1 )
+
