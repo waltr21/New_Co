@@ -23,6 +23,7 @@ onready var Main_Scene = get_parent()
 onready var heatBar = get_node("ShipOverlay/ShipHeatBar")
 onready var healthBar = get_node("ShipOverlay/ShipHealthBar")
 onready var camera = get_node("ShipCamera")
+onready var coords = get_node("Coords")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -70,6 +71,10 @@ func get_input(d):
 	#Player firing
 	if Input.is_action_pressed("player_fire"):
 		shoot()
+	
+	#Player firing
+	if Input.is_action_pressed("Coords"):
+		coords.setShow()
 
 	#Remove later.....
 	if Input.is_action_pressed("temp_ast"):
