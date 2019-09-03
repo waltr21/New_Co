@@ -4,6 +4,8 @@ var velocity = Vector2(0,0)
 var acc = 800
 var size = 2
 var startingVelocity = Vector2(0,0)
+var damage = 10
+var shooter = null
 onready var collisionShape = get_node("BulletCollision")
 # Called when the node enters the scene tree for the first time.
 func _ready():

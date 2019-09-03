@@ -14,11 +14,13 @@ func processEnter(obj):
 	if(!dead):
 		if("Bullet" in obj.filename):
 			#Kill Bullet
+			self.shooter = obj.shooter
 			obj.queue_free()
 			self.addShards()
 			self.dead = true
 		elif("Ship" in obj.filename):
 			obj.lerpPos = Vector2(rand_range(100, Globals.MAP_WIDTH - 100), rand_range(100, Globals.MAP_HEIGHT - 100))
+			obj.lerpFrom = obj.position
 
 func show():
 	draw_circle(Vector2(0,0), animateSize, Color(astColor.r, astColor.g, astColor.b, 0.8))

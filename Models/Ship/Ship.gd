@@ -9,7 +9,6 @@ var curRotation = 0
 var isAccelerating = false
 var rotateSpeed = 5
 var acc = 700.0
-var stamp = OS.get_ticks_msec()
 var shotStamp = OS.get_ticks_msec()
 var fuelStamp = OS.get_ticks_msec()
 var fireRate = 200
@@ -17,6 +16,7 @@ var fuelRate = 10
 var MAX_HEALTH = 100.0
 var health = 100
 var lerpPos = Vector2(0,0)
+var lerpFrom = Vector2(0,0)
 var allFuel = []
 
 onready var Main_Scene = get_parent()
@@ -45,15 +45,16 @@ func lerpToPos(d):
 			isAccelerating = false
 			curRotation = 0
 			camera.zoomOut = true
-		if(self.position.distance_to(lerpPos) > 100):
-			self.position.x += (lerpPos.x - self.position.x) * 2.0 * d
-			self.position.y += (lerpPos.y - self.position.y) * 2.0 * d
+		var maxDist = lerpFrom.distance_to(lerpPos)
+		if(self.position.distance_to(lerpPos) / maxDist > 0.05):
+			self.position.x += (lerpPos.x - self.position.x) * 1.0 * d
+			self.position.y += (lerpPos.y - self.position.y) * 1.0 * d
 		else:
 			lerpPos = Vector2(0,0)
 			camera.zoomOut = false
 			visible = true
 
-func get_input(d):
+func get_input():
 	#Turn right
 	if Input.is_action_pressed("player_right"):
 		curRotation = rotateSpeed
@@ -80,7 +81,7 @@ func get_input(d):
 	if Input.is_action_pressed("temp_ast"):
 		if(OS.get_ticks_msec() - shotStamp > fireRate):
 			shotStamp = OS.get_ticks_msec()
-			var ast = load("res://Models/Asteroid/Roper/Roper.tscn").instance()
+			var ast = load("res://Models/Asteroid/Telestroid/Telestroid.tscn").instance()
 			ast.velocity = (Vector2(cos(rotation), sin(rotation)))
 			ast.position = Vector2(self.position.x + 240, self.position.y + 240) 
 			
@@ -111,7 +112,7 @@ func shoot():
 		bullet.velocity = (Vector2(cos(rotation), sin(rotation)))
 		bullet.position = self.position
 		bullet.startingVelocity = self.velocity / acc
-		print(bullet.startingVelocity)
+		bullet.shooter = self
 		Main_Scene.add_child(bullet)
 		heatBar.grow()
 
@@ -158,6 +159,6 @@ func _process(delta):
 	lerpToPos(delta)
 	
 	if(visible):
-		get_input(delta)
+		get_input()
 	update()
 	bound()

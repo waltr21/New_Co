@@ -7,10 +7,12 @@ var velocity = Vector2(0,0)
 var dead = false
 var basePush = 40
 var damage = 10
+var health = 10
 var animateSize = 1
 var astColor = "FFF"
 var spawnedChild = false
 var shards = []
+var shooter = null
 onready var collisionShape = get_node("AsteroidCollision")
 
 func _ready():
@@ -75,6 +77,7 @@ func push(v):
 
 func die():
 	if (dead == true):
+		shooter.get_node("ShipCamera").startShake(2.0)
 		if(level > 1 and !spawnedChild):
 			var newAst1 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
 			var newAst2 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
@@ -128,6 +131,7 @@ func processEnter(obj):
 	if(!dead):
 		if("Bullet" in obj.filename):
 			#Kill Bullet
+			shooter = obj.shooter
 			obj.queue_free()
 			self.addShards()
 			self.dead = true
