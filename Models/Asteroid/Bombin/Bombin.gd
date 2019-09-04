@@ -7,6 +7,7 @@ var numChildren = 20
 func _ready():
 	self.level = 1
 	self.baseSize = 10
+	self.health = 100
 	self.damage = 50
 	self.acc = 100
 	astColor = "#ff0000"
@@ -15,7 +16,6 @@ func _ready():
 func _process(delta):
 	explode(delta)
 	setShape()
-
 
 func setShape():
 	if(OS.get_ticks_msec() - stamp > 100):

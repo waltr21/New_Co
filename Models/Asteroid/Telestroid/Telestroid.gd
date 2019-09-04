@@ -5,6 +5,7 @@ func _ready():
 	self.level = 1
 	self.baseSize = 80
 	self.damage = 0
+	self.health = 50
 	self.astColor = Color("#00ff51")
 	var shape = CircleShape2D.new()
 	shape.set_radius(baseSize * level)
@@ -14,10 +15,12 @@ func processEnter(obj):
 	if(!dead):
 		if("Bullet" in obj.filename):
 			#Kill Bullet
-			self.shooter = obj.shooter
-			obj.queue_free()
-			self.addShards()
-			self.dead = true
+			shooter = obj.shooter
+			obj.hit()
+			self.health -= obj.damage
+			if (self.health <= 0):
+				self.addShards()
+				self.dead = true
 		elif("Ship" in obj.filename):
 			obj.lerpPos = Vector2(rand_range(100, Globals.MAP_WIDTH - 100), rand_range(100, Globals.MAP_HEIGHT - 100))
 			obj.lerpFrom = obj.position
