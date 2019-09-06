@@ -8,9 +8,10 @@ var stamp = OS.get_ticks_msec()
 var spawnRate = 2000
 
 func _ready():
-	self.level = 4
+	self.level = 1
+	self.health = 100
 	var shape = CircleShape2D.new()
-	shape.set_radius(baseSize * level)
+	shape.set_radius(baseSize * 4)
 	self.astColor = "#fff81f"
 	self.collisionShape.shape = shape
 	randomize()

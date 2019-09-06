@@ -77,7 +77,7 @@ func push(v):
 
 func die():
 	if (dead == true):
-		shooter.get_node("ShipCamera").startShake(2.0)
+		shooter.get_node("ShipCamera").startShake(3.0)
 		if(level > 1 and !spawnedChild):
 			var newAst1 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
 			var newAst2 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
@@ -132,9 +132,11 @@ func processEnter(obj):
 		if("Bullet" in obj.filename):
 			#Kill Bullet
 			shooter = obj.shooter
-			obj.queue_free()
-			self.addShards()
-			self.dead = true
+			obj.hit()
+			self.health -= obj.damage
+			if (self.health <= 0):
+				self.addShards()
+				self.dead = true
 		elif("Ship" in obj.filename):
 			pushPlayer(obj)
 

@@ -17,6 +17,13 @@ func _process(delta):
 	self.position += ((velocity + startingVelocity) * delta * acc)
 	bound()
 
+func hit():
+	self.queue_free()
+	var dText = load("res://Models/Bullet/DamageText.tscn").instance()
+	dText.rect_position = self.position
+	dText.text = str(self.damage / 1)
+	Globals.Main_Scene.add_child(dText)
+
 func bound():
 	if(self.position.x < 0 or self.position.x > Globals.MAP_WIDTH):
 		self.queue_free()

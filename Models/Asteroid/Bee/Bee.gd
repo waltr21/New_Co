@@ -8,6 +8,7 @@ func _ready():
 	self.baseSize = 10
 	self.acc = 300
 	self.damage = 3
+	self.health = 1
 	self.astColor = "#fff81f"
 	var shape = CircleShape2D.new()
 	shape.set_radius(baseSize * level)
