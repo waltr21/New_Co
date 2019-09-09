@@ -79,13 +79,7 @@ func get_input():
 
 	#Remove later.....
 	if Input.is_action_pressed("temp_ast"):
-		if(OS.get_ticks_msec() - shotStamp > fireRate):
-			shotStamp = OS.get_ticks_msec()
-			var ast = load("res://Models/Asteroid/Telestroid/Telestroid.tscn").instance()
-			ast.velocity = (Vector2(cos(rotation), sin(rotation)))
-			ast.position = Vector2(self.position.x + 240, self.position.y + 240) 
-			
-			Main_Scene.add_child(ast)
+		Globals.modMenu.layer = -1
 
 	#Player acceleration
 	if Input.is_action_pressed("player_up"):

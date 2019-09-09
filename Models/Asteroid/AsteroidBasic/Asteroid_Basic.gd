@@ -77,7 +77,8 @@ func push(v):
 
 func die():
 	if (dead == true):
-		shooter.get_node("ShipCamera").startShake(3.0)
+		if(shooter != null):
+			shooter.get_node("ShipCamera").startShake(3.0)
 		if(level > 1 and !spawnedChild):
 			var newAst1 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
 			var newAst2 = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
@@ -88,6 +89,7 @@ func die():
 			Globals.Main_Scene.add_child(newAst1)
 			Globals.Main_Scene.add_child(newAst2)
 			spawnedChild = true
+		self.addShards()
 
 func show():
 	draw_circle(Vector2(0,0), animateSize, astColor)
@@ -135,7 +137,6 @@ func processEnter(obj):
 			obj.hit()
 			self.health -= obj.damage
 			if (self.health <= 0):
-				self.addShards()
 				self.dead = true
 		elif("Ship" in obj.filename):
 			pushPlayer(obj)
