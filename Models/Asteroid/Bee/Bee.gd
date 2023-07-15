@@ -5,11 +5,12 @@ var mother = null
 
 func _ready():
 	self.level = 1
-	self.baseSize = 10
+	self.baseSize = 15
 	self.acc = 300
 	self.damage = 3
 	self.health = 1
 	self.astColor = "#fff81f"
+	self.aPoints = 20
 	var shape = CircleShape2D.new()
 	shape.set_radius(baseSize * level)
 	self.collisionShape.shape = shape

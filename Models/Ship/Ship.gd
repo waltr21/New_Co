@@ -11,23 +11,27 @@ var rotateSpeed = 5
 var acc = 700.0
 var shotStamp = OS.get_ticks_msec()
 var fuelStamp = OS.get_ticks_msec()
-var fireRate = 200
+var fireRate = 300 # Represent the delay in MS between each shot
 var fuelRate = 10
 var MAX_HEALTH = 100.0
 var health = 100
 var lerpPos = Vector2(0,0)
 var lerpFrom = Vector2(0,0)
 var allFuel = []
+var aPoints = 0
+var cam = null
 
 onready var Main_Scene = get_parent()
 onready var heatBar = get_node("ShipOverlay/ShipHeatBar")
 onready var healthBar = get_node("ShipOverlay/ShipHealthBar")
+onready var pointLabel = get_node("ShipOverlay/PointLabel")
 onready var camera = get_node("ShipCamera")
 onready var coords = get_node("Coords")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	heatBar.setGrowCool(1,1)
+	cam = get_node("ShipCamera")
 	initFuelPool()
 
 func initFuelPool():
@@ -53,23 +57,55 @@ func lerpToPos(d):
 			lerpPos = Vector2(0,0)
 			camera.zoomOut = false
 			visible = true
+			
+
+func getStickVector(index):
+	# Index 0 -> left | Index 1 -> right 
+	# https://docs.godotengine.org/en/stable/classes/class_%40globalscope.html#enum-globalscope-joyaxis
+	var xAxis = 0
+	var yAxis = 0
+	
+	if (index == 0):
+		xAxis = 0
+		yAxis = 1
+	if (index == 1):
+		xAxis = 2
+		yAxis = 3
+	
+	var stickX = Input.get_joy_axis(0, xAxis)
+	var stickY = Input.get_joy_axis(0, yAxis)
+	return Vector2(stickX, stickY)
+	
 
 func get_input():
-	#Turn right
-	if Input.is_action_pressed("player_right"):
-		curRotation = rotateSpeed
-	#Stop turn right
-	if Input.is_action_just_released("player_right"):
-		curRotation = 0
-
-	#Turn left
-	if Input.is_action_pressed("player_left"):
-		curRotation = -rotateSpeed
-	#Stop Turn left
-	if Input.is_action_just_released("player_left"):
-		curRotation = 0 
+	var lStick = getStickVector(0)
+	if (abs(lStick.x) > 0.5 || abs(lStick.y) > 0.5):
+		self.curRotation = atan2(lStick.y, lStick.x)
+		isAccelerating = true
+	else:
+		isAccelerating = false
+		# Check for other stick 
+		var rStick = getStickVector(1)
+		if (abs(rStick.x) > 0.5 || abs(rStick.y) > 0.5):
+			self.curRotation = atan2(rStick.y, rStick.x)
 		
-	#Player firing
+	
+	
+#	#Turn right
+#	if Input.is_action_pressed("player_right"):
+#		curRotation = rotateSpeed
+#	#Stop turn right
+#	if Input.is_action_just_released("player_right"):
+#		curRotation = 0
+#
+#	#Turn left
+#	if Input.is_action_pressed("player_left"):
+#		curRotation = -rotateSpeed
+#	#Stop Turn left
+#	if Input.is_action_just_released("player_left"):
+#		curRotation = 0 
+#
+#	#Player firing
 	if Input.is_action_pressed("player_fire"):
 		shoot()
 	
@@ -104,11 +140,14 @@ func shoot():
 		shotStamp = OS.get_ticks_msec()
 		var bullet = load("res://Models/Bullet/Bullet_Basic.tscn").instance()
 		bullet.velocity = (Vector2(cos(rotation), sin(rotation)))
-		bullet.position = self.position
-		bullet.startingVelocity = self.velocity / acc
+		bullet.position = self.position + (bullet.velocity * 30)
+		
+		# Make sure the bullet is sent out relative to our current velocity
+		bullet.acc += self.velocity.length()
 		bullet.shooter = self
 		Main_Scene.add_child(bullet)
 		heatBar.grow()
+
 
 func push(v, ast=null):
 	velocity += v
@@ -138,12 +177,23 @@ func bound():
 		var tempVelocity = Vector2(cos(tempRotation), sin(tempRotation)) * 50
 		self.push(tempVelocity)
 
+func setAPoints():
+	pointLabel.setText(str(self.aPoints))
+
+# https://stackoverflow.com/questions/63970781/js-how-to-lerp-rotation-in-radians
+func rotationLerp (A, B, w):
+    var CS = (1-w) * cos(A) + w*cos(B);
+    var SN = (1-w) * sin(A) + w * sin(B);
+    return atan2(SN,CS);
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if(isAccelerating):
 		velocity += (Vector2(cos(rotation), sin(rotation)) * acc) * delta
 		addFuelParticle()
-	rotation += curRotation * delta
+
+	rotation = rotationLerp(rotation, curRotation, 20 * delta)
+	
 	position.x += velocity.x * delta
 	position.y += velocity.y * delta
 	
@@ -154,5 +204,7 @@ func _process(delta):
 	
 	if(visible):
 		get_input()
+		shoot()
 	update()
 	bound()
+	setAPoints()

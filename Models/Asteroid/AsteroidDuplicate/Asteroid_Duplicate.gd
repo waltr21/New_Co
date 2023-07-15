@@ -57,8 +57,3 @@ func duplicateSelf():
 	newAst1.mother = self.mother
 	mother.addChild(newAst1)
 	return newAst1
-
-func _draw():
-	draw_circle(Vector2(0,0), baseSize * level, astColor)
-	draw_circle(Vector2(0,0), (baseSize * level) - 2, "#000")
-	pass

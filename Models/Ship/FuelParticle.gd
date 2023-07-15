@@ -24,7 +24,6 @@ func _process(delta):
 		color = Color(1, randG/255.0, 0, 1 - (OS.get_ticks_msec() - stamp)/(maxTime*1.6))
 		position += velocity * acc * delta
 		bound()
-		update()
 	
 func bound():
 	if(OS.get_ticks_msec() - stamp > maxTime):

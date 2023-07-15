@@ -34,4 +34,5 @@ func _spawn_pressed(buttonCode):
 		ast = load("res://Models/Asteroid/Zoomer/Zoomer.tscn").instance()
 		
 	ast.position = Vector2(Globals.players[0].position.x + 240, Globals.players[0].position.y + 240) 
+
 	Globals.Main_Scene.add_child(ast)

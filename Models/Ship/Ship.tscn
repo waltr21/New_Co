@@ -26,12 +26,13 @@ polygon = PoolVector2Array( 0.22698, 10, 13.227, 10.0001, 0.227194, -24, -12.773
 
 [node name="Shape" type="Polygon2D" parent="."]
 rotation = 1.57079
-scale = Vector2( 1.2, 1.2 )
+scale = Vector2( 1.5, 1.5 )
 polygon = PoolVector2Array( -12.773, 9.99992, 13.227, 10.0001, 0.227194, -24 )
 
 [node name="InsideShape" type="Polygon2D" parent="."]
-position = Vector2( 9, 0.227043 )
+position = Vector2( 13, 0.227043 )
 rotation = 1.57079
+scale = Vector2( 1.3, 1.3 )
 color = Color( 0, 0, 0, 1 )
 polygon = PoolVector2Array( -11.0001, 17.9999, 10.9999, 18.0001, 7.52926e-005, -12 )
 

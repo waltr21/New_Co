@@ -1,20 +1,25 @@
 extends Node2D
 
 var allShards = []
-var stars = []
 var globalDelta = 0
-var numStars = 0
-var starColor = Color("#b3fff1")
 onready var ship = load("res://Models/Ship/Ship.tscn").instance()
+var stamp = 0
+var waveTimeMs = 60 * 1000.0
+var curWave = 0
+
+var spawnStamp = 0
+var allAsteroids = []
+var MAX_ASTEROIDS = 100
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#VisualServer.set_default_clear_color(Color(0,0,0))
-	#populateBackground()
 	Globals.Main_Scene = self
 	Globals.players.push_front(ship)
 	Globals.Main_Scene.add_child(ship)
+	ship.position = Vector2(Globals.MAP_WIDTH / 2, Globals.MAP_HEIGHT / 2)
 	initShards()
+	stamp = OS.get_ticks_msec()
 
 func initShards():
 	for i in range(100):
@@ -23,16 +28,45 @@ func initShards():
 		tempShard.visible = false
 		Globals.Main_Scene.add_child(tempShard)
 
-func populateBackground():
-	for i in range(3000):
-		stars.push_front(Star.new(starColor))
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	#Draw every frame.
 	globalDelta = delta
-	#update()
+	makeWave()
 	pass
+
+func makeWave():
+	var timeElapsed = OS.get_ticks_msec() - stamp
+	var wave = ceil(timeElapsed / waveTimeMs)
+	if (OS.get_ticks_msec() - spawnStamp > waveTimeMs / (10 * wave)):
+		if (allAsteroids.size() >= MAX_ASTEROIDS):
+			return
+		createAsteroid()
+		spawnStamp = OS.get_ticks_msec()
+
+func createAsteroid(pos=null, level=3): 
+	var ast = load("res://Models/Asteroid/AsteroidBasic/Asteroid_Basic.tscn").instance()
+	randomize()
+	if (pos != null): 
+		ast.position = pos
+	else:
+		moveAsteroid(ast)
+
+	ast.setLevel(level)
+	self.add_child(ast)
+	self.allAsteroids.append(ast)
+
+func removeAsteroid(ast):
+	for i in range(allAsteroids.size()):
+		var tempAst = allAsteroids[i]
+		if (ast.ID == tempAst.ID):
+			allAsteroids.remove(i)
+			break
+	ast.queue_free()
+
+func moveAsteroid(ast):
+	var offset = Globals.players[0].position
+	offset.x += rand_range(800,1200)
+	ast.position = Globals.rotateVectorAroundPoint(offset, Globals.players[0].position, rand_range(0,2*PI))
 
 func _draw():
 	#Draw borders
@@ -41,32 +75,4 @@ func _draw():
 	draw_line(Vector2(Globals.MAP_WIDTH,Globals.MAP_HEIGHT), Vector2(0, Globals.MAP_HEIGHT), "#91fbff", 4.0)
 	draw_line(Vector2(0,Globals.MAP_HEIGHT), Vector2(0, 0), "#91fbff", 4.0)
 	#Draw star background
-	for i in range(stars.size()):
-		#Only draw in range of the acitve camera.
-		if (abs(stars[i].pos.x - ship.position.x) <= Globals.CAM_WIDTH && abs(stars[i].pos.y - ship.position.y) <= Globals.CAM_HEIGHT):
-			stars[i].adjustSize(globalDelta)
-			draw_circle(stars[i].pos, stars[i].size, stars[i].starColor)
-
-#Object to hold star info.
-class Star:
-	var pos = Vector2(0,0)
-	var starColor = Color(0,0,0)
-	var size = 0
-	var increase = true
 	
-	func _init(c):
-		randomize()
-		pos = Vector2(rand_range(0,Globals.MAP_WIDTH), rand_range(0,Globals.MAP_HEIGHT))
-		starColor = c
-		size = rand_range(0.8, 2.0)
-	
-	func adjustSize(delta):
-		if(size >= 3.0):
-			increase = false
-		if(size <= 0.8):
-			increase = true
-		if(increase):
-			size += 1 * delta
-		else:
-			size -= 1 * delta
-			

@@ -7,10 +7,14 @@ func _ready():
 	self.baseSize = 40
 	self.damage = 20
 	self.acc = 700
+	self.aPoints = 80
 	astColor = "#eb7e50"
 	var shape = CircleShape2D.new()
 	shape.set_radius(baseSize * level)
 	self.collisionShape.shape = shape
+
+func targetPlayer():
+	pass
 
 func _process(delta):
 	if( OS.get_ticks_msec() - stamp > 500):

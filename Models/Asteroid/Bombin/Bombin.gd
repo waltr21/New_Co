@@ -10,6 +10,7 @@ func _ready():
 	self.health = 100
 	self.damage = 50
 	self.acc = 100
+	self.aPoints = 500
 	astColor = "#ff0000"
 	setShape()
 

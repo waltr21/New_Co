@@ -12,6 +12,7 @@ func _ready():
 	var shape = CircleShape2D.new()
 	self.astColor = Color(1,0.2,1)
 	self.health = 100
+	self.aPoints = 100
 	shape.set_radius(baseSize * 5)
 	self.collisionShape.shape = shape
 	randomize()

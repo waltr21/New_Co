@@ -23,6 +23,10 @@ config/icon="res://icon.png"
 
 Globals="*res://Globals.gd"
 
+[debug]
+
+settings/fps/force_fps=144
+
 [display]
 
 window/vsync/use_vsync=false
@@ -71,5 +75,9 @@ Coords={
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
+quality/intended_usage/framebuffer_allocation=1
+quality/intended_usage/framebuffer_allocation.mobile=1
+quality/shadows/filter_mode=0
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
 environment/default_environment="res://default_env.tres"
